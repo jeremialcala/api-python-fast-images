@@ -3,11 +3,11 @@ import logging.config
 import time
 from uuid import UUID, uuid4
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi import status
 from classes import Settings
 from utils import configure_logging
-from controllers import ctr_get_image_from_data, ctr_get_image_data_from_uuid
+from controllers import ctr_stream_image_from_data, ctr_get_image_data_from_uuid, ctr_get_image_data_from_filename
 from constants import CONTENT_TYPE, CONTENT_LENGTH, PROCESSING_TIME, APPLICATION_JSON
 
 description = """
@@ -66,7 +66,8 @@ async def interceptor(request: Request, call_next):
         log.info(request.url.path)
         [log.debug(f"Header! -> {hdr}: {val}") for hdr, val in request.headers.items()]
         response = await call_next(request)
-
+    except HTTPException as e:
+        response = Response(status_code=e.status_code)
     except Exception as e:
         log.error(e.args)
     finally:
@@ -76,6 +77,11 @@ async def interceptor(request: Request, call_next):
         return response
 
 
+@app.get("/image/{uuid}")
+async def get_image_from_uuid(uuid: str):
+    return await ctr_stream_image_from_data(await ctr_get_image_data_from_uuid(uuid=UUID(uuid)))
+
+
 @app.get("/image")
-async def get_qr_from_uuid(_uuid: str):
-    return await ctr_get_image_from_data(await ctr_get_image_data_from_uuid(uuid=UUID(_uuid)))
+async def get_image_from_filename(filename: str):
+    return await ctr_stream_image_from_data(await ctr_get_image_data_from_filename(filename=filename))

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 from datetime import datetime
 from uuid import uuid4, UUID
@@ -48,6 +49,17 @@ class ImageData(Document):
         image = None
         try:
             image = [image for image in ImageData.objects(_uuid=uuid)][-1]
+        except ValueError as e:
+            log.error(e.__str__())
+        finally:
+            return image
+
+    @staticmethod
+    async def get_image_from_filename(filename: str):
+        image = None
+        try:
+            _filename = base64.b64decode(filename.encode("utf-8")).decode("utf-8")
+            image = [image for image in ImageData.objects(imageFilename=_filename)][-1]
         except ValueError as e:
             log.error(e.__str__())
         finally:

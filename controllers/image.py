@@ -6,7 +6,7 @@ from logging import config
 from uuid import UUID
 import base64
 from fastapi.responses import StreamingResponse, FileResponse
-
+from fastapi.exceptions import HTTPException
 from classes import ImageData, Settings
 from utils import configure_logging
 
@@ -29,10 +29,18 @@ async def ctr_get_image_data_from_uuid(uuid: UUID) -> ImageData:
         return image
 
 
-async def ctr_get_image_from_data(data: ImageData):
+async def ctr_get_image_data_from_filename(filename: str) -> ImageData:
+    log.info(f"Starting {currentframe().f_code.co_name} filename: {str(filename)}")
+    image = await ImageData.get_image_from_filename(filename=filename)
+    if image is None:
+        raise HTTPException(status_code=404, detail="image not found")
+    log.info(f"{currentframe().f_code.co_name} finish")
+    return image
+
+
+async def ctr_stream_image_from_data(data: ImageData):
     img = Image.open(BytesIO(base64.b64decode(data.imageData, validate=True)))
     buf = BytesIO()
-
     fp = TemporaryFile()
     img.save(fp, data.imageType)
     fp.seek(0)
