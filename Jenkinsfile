@@ -1,10 +1,10 @@
 pipeline {
-    agent { dockerfile true }
+    def app
 
     stages {
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying"'
+                app = docker.build("getintodevops/hellonode")
             }
         }
     }
