@@ -1,9 +1,10 @@
 pipeline {
     agent any
     stages {
-        stage('Deploy') {
+
+        stage('Build image') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'docker build -t api-python-fast-images:latest .'
             }
         }
     }
