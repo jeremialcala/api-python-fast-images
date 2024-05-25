@@ -7,7 +7,9 @@ pipeline {
 
             steps {
                 script {
-                    dockerImage = docker.build("api-python-fast-images:latest")
+                    docker.withRegistry('https://rgx01.web-ones.com', 'RGX01_WEBONES') {
+                        dockerImage = docker.build("api-python-fast-images:latest")
+                    }
                }
             }
         }
@@ -16,7 +18,7 @@ pipeline {
     post {
         always {
             // Clean up any temporary files
-            sh 'rm -rf target/'
+            sh 'echo "DONE"'
         }
     }
 }
