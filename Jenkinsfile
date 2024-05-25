@@ -1,13 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Test') {
-            steps {
-                withPythonEnv('/usr/bin/python3.10') {
-                    sh 'python3 --version'
-                }
-            }
-        }
         stage('Build image') {
             agent any
             steps {
