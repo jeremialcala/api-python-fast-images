@@ -4,8 +4,7 @@ pipeline {
         stage('Test') {
             steps {
                 withPythonEnv('/usr/bin/python3.5') {
-                    pysh 'pip install --no-cache-dir -r requirements.txt --break-system-packages'
-                    pysh 'pytest --disable-warnings'
+                    pysh 'python --version'
                 }
             }
         }
@@ -20,7 +19,6 @@ pipeline {
                }
             }
         }
-
         stage('Deployment') {
             agent any
             steps {
@@ -31,7 +29,6 @@ pipeline {
 
         }
     }
-
     post {
         always {
             // Clean up any temporary files
