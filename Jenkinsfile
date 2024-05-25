@@ -3,8 +3,14 @@ pipeline {
     stages {
 
         stage('Build image') {
+            agent any
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
             steps {
-                sh 'docker build -t api-python-fast-images:latest .'
+                script {
+                    dockerImage = docker.build("api-python-fast-images:latest:${env.BUILD_ID}")
+               }
             }
         }
     }
