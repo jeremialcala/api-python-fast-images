@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                withPythonEnv('/usr/bin/python3.5') {
+                withPythonEnv('/usr/bin/python3.10') {
                     pysh 'python --version'
                 }
             }
