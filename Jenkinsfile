@@ -3,8 +3,9 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                withPythonEnv('/usr/bin/python3.11') {
-                    sh 'pytest --disable-warnings'
+                withPythonEnv('/usr/bin/python3.5') {
+                    pysh 'pip install --no-cache-dir -r requirements.txt --break-system-packages'
+                    pysh 'pytest --disable-warnings'
                 }
             }
         }
