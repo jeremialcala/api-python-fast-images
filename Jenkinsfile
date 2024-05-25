@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'pytest --disable-warnings'
+                withPythonEnv('/usr/bin/python3.11') {
+                    sh 'pytest --disable-warnings'
+                }
             }
         }
         stage('Build image') {
