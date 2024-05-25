@@ -1,4 +1,4 @@
-FROM rgx01.web-ones.com/ubuntu:latest
+FROM rgx01.web-ones.com/ubuntu:0.0.1
 LABEL authors="Jeremi"
 
 COPY requirements.txt ./
